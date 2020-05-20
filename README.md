@@ -1,4 +1,7 @@
 # @medial/lambda
+[![Build Status](https://travis-ci.com/medial-io/lambda.svg?branch=master)](https://travis-ci.com/github/medial-io/lambda)
+[![codecov](https://codecov.io/gh/medial-io/lambda/branch/master/graph/badge.svg)](https://codecov.io/gh/medial-io/lambda)
+
 
 # A wrapper for AWS Lambda 
 A wrapper to help build AWS Lambda backed HTTP services.
