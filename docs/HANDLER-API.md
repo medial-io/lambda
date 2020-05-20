@@ -1,6 +1,6 @@
 # Handler Object
 The handler object has two attributes:
- - *validate* - `optional` validation object for path parameters, query parameters and body
+ - *validate* - `optional` validation object for path parameters, query parameters and payload
  - *handler* - `required` function that performs the business logic
 
 ### validate

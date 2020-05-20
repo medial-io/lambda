@@ -1,10 +1,13 @@
 # @medial/lambda
 
 # A wrapper for AWS Lambda 
-A wrapper to help build AWS Lambda services.
+A wrapper to help build AWS Lambda backed HTTP services.
+
+Features
+ - Validation via [Joi](https://github.com/hapijs/joi)
+ - Error responses via [Boom] (https://github.com/hapijs/boom)
 
 **Inspired by the [hapi](https://hapi.dev/) framework.**
-
 
 ## Example
 
@@ -29,7 +32,7 @@ exports.get = Lambda.define({
   }
 });
 ```
-`exports.get` is AWS Lambda function and when it is configured for HTTP access - when invoked will return ```{"hello": "world"}``` with a response code `200`.
+`exports.get` is now a AWS Lambda function. Once this function is configured for HTTP access via the AWS API Gateway - when invoked, it will return ```{"hello": "world"}``` with a response code of `200`.
 
 You can also invoke the lambda from another lambda. The response will look like this: 
 ```
