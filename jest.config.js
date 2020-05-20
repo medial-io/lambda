@@ -13,6 +13,8 @@ module.exports = {
   collectCoverageFrom: ['<rootDir>/lib/**/*.js'],
   collectCoverage: true,
   coverageReporters: [
+    'lcov',
+    'clover',
     'text-summary',
     'html'
   ]
