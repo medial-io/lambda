@@ -1,18 +1,19 @@
 {
-  "name": "@medial/medial",
+  "name": "@medial/lambda",
   "version": "0.0.1",
   "description": "A middleware for AWS lambda",
   "main": "index.js",
   "dependencies": {
-    "@hapi/boom": "^7.4.11",
-    "@hapi/hoek": "^8.2.5",
-    "@hapi/joi": "^16.1.5"
+    "@hapi/hoek": "^9.0.4",
+    "@hapi/joi": "^17.1.1"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
+    "@hapi/boom": "^9.1.0",
+    "aws-sdk": "^2.679.0",
+    "eslint": "^7.0.0",
     "eslint-config-google": "^0.14.0",
-    "jest": "^24.9.0",
-    "jest-runner-eslint": "^0.7.5"
+    "jest": "^26.0.1",
+    "jest-runner-eslint": "^0.8.0"
   },
   "scripts": {
     "test": "jest"

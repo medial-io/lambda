@@ -2,7 +2,7 @@
 
 const Joi = require('@hapi/joi');
 
-const Medial = require('../');
+const Lambda = require('../');
 
 describe('Medial lambda', () => {
   describe('successfully returns a lambda that validates', () => {
@@ -18,8 +18,8 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
-      const result = await lambda({params: {a: '1'}});
+      const lambda = Lambda.define(handler);
+      const result = await lambda({pathParameters: {a: '1'}});
 
       expect(result).toEqual({
         headers: {},
@@ -40,8 +40,8 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
-      const result = await lambda({query: {a: '1'}});
+      const lambda = Lambda.define(handler);
+      const result = await lambda({queryStringParameters: {a: '1'}});
 
       expect(result).toEqual({
         headers: {},
@@ -62,13 +62,81 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
-      const result = await lambda({payload: {a: '1'}});
+      const lambda = Lambda.define(handler);
+      const result = await lambda({body: JSON.stringify({a: '1'})});
 
       expect(result).toEqual({
         headers: {},
         statusCode: 200,
         body: JSON.stringify({a: '1'})
+      });
+    });
+  });
+
+  describe('successfully returns a lambda that handles empty string for', () => {
+    it('params', async () => {
+      const handler = {
+        validate: {
+          params: {
+            a: Joi.string()
+          }
+        },
+        handler: async function(request, h) {
+          return request.params;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({pathParameters: ''});
+
+      expect(result).toEqual({
+        headers: {},
+        statusCode: 200,
+        body: JSON.stringify({})
+      });
+    });
+
+    it('query', async () => {
+      const handler = {
+        validate: {
+          query: {
+            a: Joi.string()
+          }
+        },
+        handler: async function(request, h) {
+          return request.query;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({queryStringParameters: ''});
+
+      expect(result).toEqual({
+        headers: {},
+        statusCode: 200,
+        body: JSON.stringify({})
+      });
+    });
+
+    it('payload', async () => {
+      const handler = {
+        validate: {
+          payload: {
+            a: Joi.string()
+          }
+        },
+        handler: async function(request, h) {
+          return request.payload;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({body: ''});
+
+      expect(result).toEqual({
+        headers: {},
+        statusCode: 200,
+        body: JSON.stringify({})
       });
     });
   });
@@ -86,7 +154,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -116,7 +184,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -134,7 +202,7 @@ describe('Medial lambda', () => {
       });
     });
 
-    it('payload', async () => {
+    it('payload - incorrect payload is provided', async () => {
       const handler = {
         validate: {
           payload: {
@@ -146,7 +214,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -159,6 +227,36 @@ describe('Medial lambda', () => {
           validation: {
             source: 'payload',
             keys: ['a']
+          }
+        })
+      });
+    });
+
+    it('payload with empty string is provided', async () => {
+      const handler = {
+        validate: {
+          payload: {
+            a: Joi.string().required()
+          }
+        },
+        handler: async function(request, h) {
+          return request.payload;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({body: 'a string'});
+
+      expect(result).toEqual({
+        headers: {},
+        statusCode: 400,
+        body: JSON.stringify({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: '"value" must be of type object',
+          validation: {
+            source: 'payload',
+            keys: ['']
           }
         })
       });
@@ -179,7 +277,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -202,7 +300,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -225,7 +323,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -249,8 +347,8 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
-      const result = await lambda({params: {a: '1'}});
+      const lambda = Lambda.define(handler);
+      const result = await lambda({pathParameters: {a: '1'}});
 
       expect(result).toEqual({
         headers: {},
@@ -272,7 +370,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -295,7 +393,77 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
+      const result = await lambda({});
+
+      expect(result).toEqual({
+        headers: {},
+        statusCode: 201,
+        body: JSON.stringify({hello: 'world'})
+      });
+    });
+  });
+
+  describe('response is used to set the message/body and code', () => {
+    it('params', async () => {
+      const handler = {
+        validate: {
+          params: {
+            a: Joi.string().required()
+          }
+        },
+        handler: async function(request, h) {
+          return h.response().message({hello: 'world'}).code(201);
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({pathParameters: {a: '1'}});
+
+      expect(result).toEqual({
+        headers: {},
+        statusCode: 201,
+        body: JSON.stringify({hello: 'world'})
+      });
+    });
+
+    it('query', async () => {
+      const handler = {
+        validate: {
+          query: {
+            a: Joi.string().required()
+          },
+          failAction: 'ignore'
+        },
+        handler: async function(request, h) {
+          return h.response().message({hello: 'world'}).code(201);
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({});
+
+      expect(result).toEqual({
+        headers: {},
+        statusCode: 201,
+        body: JSON.stringify({hello: 'world'})
+      });
+    });
+
+    it('payload', async () => {
+      const handler = {
+        validate: {
+          payload: {
+            a: Joi.string().required()
+          },
+          failAction: 'ignore'
+        },
+        handler: async function(request, h) {
+          return h.response().message({hello: 'world'}).code(201);
+        }
+      };
+
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -314,7 +482,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({params: {a: '1'}});
 
       expect(result).toEqual({
@@ -331,7 +499,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({query: {a: '1'}});
 
       expect(result).toEqual({
@@ -348,7 +516,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({payload: {a: '1'}});
 
       expect(result).toEqual({
@@ -359,7 +527,7 @@ describe('Medial lambda', () => {
     });
   });
 
-  describe('handles a lambda that fails validation and responds with a customer error', () => {
+  describe('handles a lambda that fails validation and responds with a custom error', () => {
     it('params', async () => {
       const handler = {
         validate: {
@@ -372,7 +540,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -402,7 +570,7 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
+      const lambda = Lambda.define(handler);
       const result = await lambda({});
 
       expect(result).toEqual({
@@ -432,8 +600,8 @@ describe('Medial lambda', () => {
         }
       };
 
-      const lambda = Medial.lambda(handler);
-      const result = await lambda({payload: {a: 1}});
+      const lambda = Lambda.define(handler);
+      const result = await lambda({body: JSON.stringify({a: 1})});
 
       expect(result).toEqual({
         headers: {},
@@ -458,7 +626,7 @@ describe('Medial lambda', () => {
       }
     };
 
-    const lambda = Medial.lambda(handler);
+    const lambda = Lambda.define(handler);
     const result = await lambda({});
 
     expect(result).toEqual({

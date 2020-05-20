@@ -10,6 +10,7 @@ module.exports = {
       testMatch: ['<rootDir>/lib/**/*.js', '<rootDir>/test/**/*.js']
     }
   ],
+  collectCoverageFrom: ['<rootDir>/lib/**/*.js'],
   collectCoverage: true,
   coverageReporters: [
     'text-summary',

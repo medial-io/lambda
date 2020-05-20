@@ -1,3 +1,4 @@
 'use strict';
 
-exports.lambda = require('./lib/index').lambda;
+exports.define = require('./lib').define;
+exports.invoke = require('./lib').invoke;

@@ -4,3 +4,14 @@ jspm_packages
 
 # Serverless directories
 .serverless
+
+# jest/tests
+coverage
+__mocks__
+test
+jest*
+
+# ide and linting
+.vscode
+.eslintrc.js
+
