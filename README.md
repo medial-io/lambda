@@ -42,6 +42,10 @@ You can also invoke the lambda from another lambda. The response will look like 
   body: '{"hello": "world"}' // this is stringifyed object 
 }
 ```
+## Working example
+Deploy the example to AWS and/or run it locally with swagger documentation
+
+**[A full example](https://github.com/medial-io/lambda-example)**
 
 # Documentation
  - [Handler API](docs/HANDLER-API.md)
