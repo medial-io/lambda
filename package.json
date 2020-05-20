@@ -4,6 +4,9 @@
   "description": "A middleware for AWS lambda",
   "main": "index.js",
   "repository": "git://github.com/medial-io/lambda",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "@hapi/hoek": "^9.0.4",
     "@hapi/joi": "^17.1.1"
@@ -16,9 +19,13 @@
     "jest": "^26.0.1",
     "jest-runner-eslint": "^0.8.0"
   },
-  "scripts": {
-    "test": "jest"
-  },
+  "keywords": [
+    "aws",
+    "aws lambda",
+    "medial",
+    "lambda",
+    "middleware"
+  ],
   "author": "Amit Kirdatt",
   "license": "MIT"
 }
