@@ -78,7 +78,12 @@ The function takes in two parameters:
 
 More information on the [AWS Lambda handler](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html)
 
-The response toolkit `h` is useful in settting specific HTTP status codes
+The response toolkit `h` is useful in settting specific HTTP status codes and headers via [response](#Response)
+
+#### `h.response(payload)`
+Sets the response payload
+
+*Returns* the current [response](#Response) object
 
 ```
 const Lambda = require('@medial/lambda');
@@ -99,7 +104,48 @@ exports.get = Lambda.define({
       throw Boom.notFound('boo boo');
     }
 
-    return h.response({hello: 'world'}).code(200);
+    return h.response({hello: 'world'})
+      .header('myKey': 'myValue')
+      .code(200);
   }
 });
 ```
+
+### Response 
+
+Follows a builder pattern
+
+#### `code(statusCode)`
+Sets the HTTP status code. For example: `200`
+
+*Returns* the current response object
+
+#### `header(key, value, options)`
+Set a response header with the specified `key` and `value`.
+
+*options*:
+  - append: If the `value` should be appended to an existing key 
+
+The append option is useful when setting more than one cookie. For example:
+
+```
+const Lambda = require('@medial/lambda');
+
+exports.get = Lambda.define({
+  handler: async function(request, h) {
+    return h.response({hello: 'world'})
+      .header('my-header', 'value1')
+      .header('set-cookie', 'cookieKey=cookieValue')
+      .header('set-cookie', 'cookieKey1=cookieValue; HttpOnly', {append: true})
+      .code(200);
+  }
+};
+```
+
+The above example will set two cookies:
+ - `cookieKey` with value `cookieValue`
+ - `cookieKey1` with value `cookieValue` (HttpOnly cookie)
+
+It'll also set a header called `my-header` with value `value`
+
+*Returns* the current response object

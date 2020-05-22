@@ -22,7 +22,7 @@ describe('Medial lambda', () => {
       const result = await lambda({pathParameters: {a: '1'}});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({a: '1'})
       });
@@ -44,7 +44,7 @@ describe('Medial lambda', () => {
       const result = await lambda({queryStringParameters: {a: '1'}});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({a: '1'})
       });
@@ -66,7 +66,7 @@ describe('Medial lambda', () => {
       const result = await lambda({body: JSON.stringify({a: '1'})});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({a: '1'})
       });
@@ -90,7 +90,7 @@ describe('Medial lambda', () => {
       const result = await lambda({pathParameters: ''});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({})
       });
@@ -112,7 +112,7 @@ describe('Medial lambda', () => {
       const result = await lambda({queryStringParameters: ''});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({})
       });
@@ -134,7 +134,7 @@ describe('Medial lambda', () => {
       const result = await lambda({body: ''});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({})
       });
@@ -158,7 +158,7 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 400,
         body: JSON.stringify({
           statusCode: 400,
@@ -188,7 +188,7 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 400,
         body: JSON.stringify({
           statusCode: 400,
@@ -218,7 +218,7 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 400,
         body: JSON.stringify({
           statusCode: 400,
@@ -248,7 +248,7 @@ describe('Medial lambda', () => {
       const result = await lambda({body: 'a string'});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 400,
         body: JSON.stringify({
           statusCode: 400,
@@ -281,7 +281,7 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: undefined
       });
@@ -304,7 +304,7 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: undefined
       });
@@ -327,150 +327,92 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: undefined
       });
     });
   });
 
-  describe('toolkit is used to set the response and code', () => {
-    it('params', async () => {
-      const handler = {
-        validate: {
-          params: {
-            a: Joi.string().required()
-          }
-        },
-        handler: async function(request, h) {
-          return h.response({hello: 'world'}).code(201);
-        }
-      };
+  it('toolkit is used to set the response and code', async () => {
+    const handler = {
+      handler: async function(request, h) {
+        return h.response({hello: 'world'}).code(201);
+      }
+    };
 
-      const lambda = Lambda.define(handler);
-      const result = await lambda({pathParameters: {a: '1'}});
+    const lambda = Lambda.define(handler);
+    const result = await lambda({pathParameters: {a: '1'}});
 
-      expect(result).toEqual({
-        headers: {},
-        statusCode: 201,
-        body: JSON.stringify({hello: 'world'})
-      });
-    });
-
-    it('query', async () => {
-      const handler = {
-        validate: {
-          query: {
-            a: Joi.string().required()
-          },
-          failAction: 'ignore'
-        },
-        handler: async function(request, h) {
-          return h.response({hello: 'world'}).code(201);
-        }
-      };
-
-      const lambda = Lambda.define(handler);
-      const result = await lambda({});
-
-      expect(result).toEqual({
-        headers: {},
-        statusCode: 201,
-        body: JSON.stringify({hello: 'world'})
-      });
-    });
-
-    it('payload', async () => {
-      const handler = {
-        validate: {
-          payload: {
-            a: Joi.string().required()
-          },
-          failAction: 'ignore'
-        },
-        handler: async function(request, h) {
-          return h.response({hello: 'world'}).code(201);
-        }
-      };
-
-      const lambda = Lambda.define(handler);
-      const result = await lambda({});
-
-      expect(result).toEqual({
-        headers: {},
-        statusCode: 201,
-        body: JSON.stringify({hello: 'world'})
-      });
+    expect(result).toEqual({
+      multiValueHeaders: {},
+      statusCode: 201,
+      body: JSON.stringify({hello: 'world'})
     });
   });
 
-  describe('response is used to set the message/body and code', () => {
-    it('params', async () => {
-      const handler = {
-        validate: {
-          params: {
-            a: Joi.string().required()
-          }
-        },
-        handler: async function(request, h) {
-          return h.response().message({hello: 'world'}).code(201);
-        }
-      };
+  it('response is used to set the message/body, code and header', async () => {
+    const handler = {
+      handler: async function(request, h) {
+        return h.response().message({hello: 'world'}).header('my-header', 'my-value').code(201);
+      }
+    };
 
-      const lambda = Lambda.define(handler);
-      const result = await lambda({pathParameters: {a: '1'}});
+    const lambda = Lambda.define(handler);
+    const result = await lambda();
 
-      expect(result).toEqual({
-        headers: {},
-        statusCode: 201,
-        body: JSON.stringify({hello: 'world'})
-      });
+    expect(result).toEqual({
+      multiValueHeaders: {'my-header': ['my-value']},
+      statusCode: 201,
+      body: JSON.stringify({hello: 'world'})
     });
+  });
 
-    it('query', async () => {
-      const handler = {
-        validate: {
-          query: {
-            a: Joi.string().required()
-          },
-          failAction: 'ignore'
-        },
-        handler: async function(request, h) {
-          return h.response().message({hello: 'world'}).code(201);
-        }
-      };
+  it('response is used to set the message/body, code and multiple headers with the same key', async () => {
+    const handler = {
+      handler: async function(request, h) {
+        return h.response()
+            .message({hello: 'world'})
+            .header('set-cookie', 'cookieKey=cookieValue; Domain=yourdomain.com; Secure; HttpOnly')
+            .header('set-cookie', 'cookieKey1=cookieValue1; Domain=yourdomain.com; Secure; HttpOnly', {append: true})
+            .code(200);
+      }
+    };
 
-      const lambda = Lambda.define(handler);
-      const result = await lambda({});
+    const lambda = Lambda.define(handler);
+    const result = await lambda();
 
-      expect(result).toEqual({
-        headers: {},
-        statusCode: 201,
-        body: JSON.stringify({hello: 'world'})
-      });
+    expect(result).toEqual({
+      multiValueHeaders: {
+        'set-cookie': [
+          'cookieKey=cookieValue; Domain=yourdomain.com; Secure; HttpOnly',
+          'cookieKey1=cookieValue1; Domain=yourdomain.com; Secure; HttpOnly'
+        ]
+      },
+      statusCode: 200,
+      body: JSON.stringify({hello: 'world'})
     });
+  });
 
-    it('payload', async () => {
-      const handler = {
-        validate: {
-          payload: {
-            a: Joi.string().required()
-          },
-          failAction: 'ignore'
-        },
-        handler: async function(request, h) {
-          return h.response().message({hello: 'world'}).code(201);
-        }
-      };
+  it('response is used to set the message/body, code and header with append set to true', async () => {
+    const handler = {
+      handler: async function(request, h) {
+        return h.response()
+            .message({hello: 'world'})
+            .header('set-cookie', 'cookieKey=cookieValue; Domain=yourdomain.com; Secure; HttpOnly', {append: true})
+            .code(200);
+      }
+    };
 
-      const lambda = Lambda.define(handler);
-      const result = await lambda({});
+    const lambda = Lambda.define(handler);
+    const result = await lambda();
 
-      expect(result).toEqual({
-        headers: {},
-        statusCode: 201,
-        body: JSON.stringify({hello: 'world'})
-      });
+    expect(result).toEqual({
+      multiValueHeaders: {
+        'set-cookie': ['cookieKey=cookieValue; Domain=yourdomain.com; Secure; HttpOnly']
+      },
+      statusCode: 200,
+      body: JSON.stringify({hello: 'world'})
     });
   });
 
@@ -486,7 +428,7 @@ describe('Medial lambda', () => {
       const result = await lambda({params: {a: '1'}});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({a: '1'})
       });
@@ -503,7 +445,7 @@ describe('Medial lambda', () => {
       const result = await lambda({query: {a: '1'}});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({a: '1'})
       });
@@ -520,7 +462,7 @@ describe('Medial lambda', () => {
       const result = await lambda({payload: {a: '1'}});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 200,
         body: JSON.stringify({a: '1'})
       });
@@ -544,7 +486,7 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 400,
         body: JSON.stringify({
           statusCode: 400,
@@ -574,7 +516,7 @@ describe('Medial lambda', () => {
       const result = await lambda({});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 400,
         body: JSON.stringify({
           statusCode: 400,
@@ -604,7 +546,7 @@ describe('Medial lambda', () => {
       const result = await lambda({body: JSON.stringify({a: 1})});
 
       expect(result).toEqual({
-        headers: {},
+        multiValueHeaders: {},
         statusCode: 400,
         body: JSON.stringify({
           statusCode: 400,
@@ -630,7 +572,7 @@ describe('Medial lambda', () => {
     const result = await lambda({});
 
     expect(result).toEqual({
-      headers: {},
+      multiValueHeaders: {},
       statusCode: 500,
       body: JSON.stringify({
         message: 'bad bad thing'

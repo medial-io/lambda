@@ -40,7 +40,7 @@ exports.get = Lambda.define({
 You can also invoke the lambda from another lambda. The response will look like this: 
 ```
 {
-  headers: {},
+  multiValueHeaders: {},
   statusCode: 200,
   body: '{"hello": "world"}' // this is stringifyed object 
 }
