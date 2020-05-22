@@ -120,11 +120,11 @@ Sets the HTTP status code. For example: `200`
 
 *Returns* the current response object
 
-#### `header(key, value, options)`
+#### `header(key, value, options?)`
 Set a response header with the specified `key` and `value`.
 
 *options*:
-  - append: If the `value` should be appended to an existing key 
+  - append: *boolean* - If the `value` should be appended to an existing key 
 
 The append option is useful when setting more than one cookie. For example:
 
