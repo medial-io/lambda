@@ -50,6 +50,32 @@ describe('Medial lambda', () => {
       });
     });
 
+    it('query with parameters that are an array', async () => {
+      const handler = {
+        validate: {
+          query: {
+            a: Joi.string().required(),
+            b: Joi.array().items(Joi.string()).required()
+          }
+        },
+        handler: async function(request, h) {
+          return request.query;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({
+        queryStringParameters: {a: '1', b: '3'},
+        multiValueQueryStringParameters: {a: ['1'], b: ['2', '3']}
+      });
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 200,
+        body: JSON.stringify({a: '1', b: ['2', '3']})
+      });
+    });
+
     it('payload', async () => {
       const handler = {
         validate: {
@@ -283,7 +309,7 @@ describe('Medial lambda', () => {
       expect(result).toEqual({
         multiValueHeaders: {},
         statusCode: 200,
-        body: undefined
+        body: '{}'
       });
     });
 
@@ -306,7 +332,7 @@ describe('Medial lambda', () => {
       expect(result).toEqual({
         multiValueHeaders: {},
         statusCode: 200,
-        body: undefined
+        body: '{}'
       });
     });
 
@@ -329,7 +355,7 @@ describe('Medial lambda', () => {
       expect(result).toEqual({
         multiValueHeaders: {},
         statusCode: 200,
-        body: undefined
+        body: '{}'
       });
     });
   });
@@ -425,7 +451,7 @@ describe('Medial lambda', () => {
       };
 
       const lambda = Lambda.define(handler);
-      const result = await lambda({params: {a: '1'}});
+      const result = await lambda({pathParameters: {a: '1'}});
 
       expect(result).toEqual({
         multiValueHeaders: {},
@@ -442,7 +468,7 @@ describe('Medial lambda', () => {
       };
 
       const lambda = Lambda.define(handler);
-      const result = await lambda({query: {a: '1'}});
+      const result = await lambda({queryStringParameters: {a: '1'}});
 
       expect(result).toEqual({
         multiValueHeaders: {},
@@ -459,7 +485,7 @@ describe('Medial lambda', () => {
       };
 
       const lambda = Lambda.define(handler);
-      const result = await lambda({payload: {a: '1'}});
+      const result = await lambda({body: {a: '1'}});
 
       expect(result).toEqual({
         multiValueHeaders: {},

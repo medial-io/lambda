@@ -9,6 +9,9 @@ A wrapper to help build AWS Lambda backed HTTP services.
 Features
  - Validation via [Joi](https://github.com/hapijs/joi)
  - Error responses via [Boom] (https://github.com/hapijs/boom)
+ - handles complexities of dealing with lambda functions (For example: multiple values for the same key in queryParams)
+
+**Please checkout the [full example](https://github.com/medial-io/lambda-example)**
 
 **Inspired by the [hapi](https://hapi.dev/) framework.**
 

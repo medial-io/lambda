@@ -15,3 +15,6 @@ jest*
 .vscode
 .eslintrc.js
 
+# ci
+.travis*
+
