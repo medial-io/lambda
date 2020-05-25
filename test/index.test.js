@@ -6,6 +6,50 @@ const Lambda = require('../');
 
 describe('Medial lambda', () => {
   describe('successfully returns a lambda that validates', () => {
+    it('headers', async () => {
+      const handler = {
+        validate: {
+          headers: {
+            a: Joi.string().required()
+          }
+        },
+        handler: async function(request, h) {
+          return request.headers;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({input: {headers: {a: '1'}, multiValueHeaders: {a: ['1']}}});
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 200,
+        body: JSON.stringify({a: '1'})
+      });
+    });
+
+    it('multi-value headers', async () => {
+      const handler = {
+        validate: {
+          headers: {
+            a: Joi.array().items(Joi.string()).required()
+          }
+        },
+        handler: async function(request, h) {
+          return request.headers;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({input: {headers: {a: '1'}, multiValueHeaders: {a: ['1', '2']}}});
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 200,
+        body: JSON.stringify({a: ['1', '2']})
+      });
+    });
+
     it('params', async () => {
       const handler = {
         validate: {
@@ -100,6 +144,28 @@ describe('Medial lambda', () => {
   });
 
   describe('successfully returns a lambda that handles empty string for', () => {
+    it('headers', async () => {
+      const handler = {
+        validate: {
+          headers: {
+            a: Joi.string()
+          }
+        },
+        handler: async function(request, h) {
+          return request.headers;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({input: {headers: '', multiValueHeaders: ''}});
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 200,
+        body: JSON.stringify({})
+      });
+    });
+
     it('params', async () => {
       const handler = {
         validate: {
@@ -168,6 +234,36 @@ describe('Medial lambda', () => {
   });
 
   describe('handles a lambda that fails validation and responds with an error', () => {
+    it('headers', async () => {
+      const handler = {
+        validate: {
+          headers: {
+            a: Joi.string().required()
+          }
+        },
+        handler: async function(request, h) {
+          return request.headers;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({});
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 400,
+        body: JSON.stringify({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: '"a" is required',
+          validation: {
+            source: 'headers',
+            keys: ['a']
+          }
+        })
+      });
+    });
+
     it('params', async () => {
       const handler = {
         validate: {
@@ -290,6 +386,29 @@ describe('Medial lambda', () => {
   });
 
   describe('handles a lambda that has valdiation attribute "failAction" is set to "ignore"', () => {
+    it('headers', async () => {
+      const handler = {
+        validate: {
+          headers: {
+            a: Joi.string().required()
+          },
+          failAction: 'ignore'
+        },
+        handler: async function(request, h) {
+          return request.headers;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({});
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 200,
+        body: '{}'
+      });
+    });
+
     it('params', async () => {
       const handler = {
         validate: {
@@ -443,6 +562,23 @@ describe('Medial lambda', () => {
   });
 
   describe('successfully returns a lambda that has no validation defined', () => {
+    it('headers', async () => {
+      const handler = {
+        handler: async function(request, h) {
+          return request.headers;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({input: {headers: {a: '1'}, multiValueHeaders: {a: ['1', '2']}}});
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 200,
+        body: JSON.stringify({a: ['1', '2']})
+      });
+    });
+
     it('params', async () => {
       const handler = {
         handler: async function(request, h) {
@@ -496,6 +632,36 @@ describe('Medial lambda', () => {
   });
 
   describe('handles a lambda that fails validation and responds with a custom error', () => {
+    it('headers', async () => {
+      const handler = {
+        validate: {
+          headers: {
+            a: Joi.string().required().error(new Error('bad bad'))
+          }
+        },
+        handler: async function(request, h) {
+          return request.headers;
+        }
+      };
+
+      const lambda = Lambda.define(handler);
+      const result = await lambda({});
+
+      expect(result).toEqual({
+        multiValueHeaders: {},
+        statusCode: 400,
+        body: JSON.stringify({
+          statusCode: 400,
+          error: 'Bad Request',
+          message: 'bad bad',
+          validation: {
+            source: 'headers',
+            keys: []
+          }
+        })
+      });
+    });
+
     it('params', async () => {
       const handler = {
         validate: {

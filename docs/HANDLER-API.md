@@ -5,6 +5,27 @@ The handler object has two attributes:
 
 ### validate
 
+#### `handler.validate.headers`
+A [Joi](https://github.com/hapijs/joi) validation object for incoming headers. After validation, the headers are available in `request.headers`
+
+*Note: The original headers are untouched and available in `event.input.headers`*
+
+```
+exports.get = Lambda.define({
+  validate: {
+    headers: Joi.object().keys({
+      a: Joi.string(),
+      b: Joi.string()
+    }).unknown() // Allow unknown values unless you want to validate every single header that the gateway provides
+  },
+  handler: async function(request, h) {
+    const {a, b} = request.headers;
+
+    return {headers: {a, b}};
+  }
+});
+```
+
 #### `handler.validate.params`
 A [Joi](https://github.com/hapijs/joi) validation object for incoming request path parameters. After validation, the path params are available in `request.params`
 

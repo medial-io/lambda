@@ -8,6 +8,10 @@ A wrapper to help build AWS Lambda backed HTTP services.
 
 Features
  - Validation via [Joi](https://github.com/hapijs/joi)
+    - Headers
+    - Path Params
+    - Query Params
+    - Payload
  - Error responses via [Boom] (https://github.com/hapijs/boom)
  - handles complexities of dealing with lambda functions (For example: multiple values for the same key in queryParams)
 
