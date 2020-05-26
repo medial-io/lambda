@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.com/medial-io/lambda.svg?branch=master)](https://travis-ci.com/github/medial-io/lambda)
 [![codecov](https://codecov.io/gh/medial-io/lambda/branch/master/graph/badge.svg)](https://codecov.io/gh/medial-io/lambda)
 [![Known Vulnerabilities](https://snyk.io/test/github/medial-io/lambda/badge.svg?targetFile=package.json)](https://snyk.io/test/github/medial-io/lambda?targetFile=package.json)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/medial-io/lambda.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/medial-io/lambda/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/medial-io/lambda.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/medial-io/lambda/context:javascript)
 
 # A wrapper for AWS Lambda 
 A wrapper to help build AWS Lambda backed HTTP services.
