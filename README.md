@@ -14,7 +14,7 @@ Features
     - Path Params
     - Query Params
     - Payload
- - Error responses via [Boom] (https://github.com/hapijs/boom)
+ - Error responses via [Boom](https://github.com/hapijs/boom)
  - handles complexities of dealing with lambda functions (For example: multiple values for the same key in queryParams)
 
 **Please checkout the [full example](https://github.com/medial-io/lambda-example)**

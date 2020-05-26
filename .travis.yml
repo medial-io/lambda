@@ -7,13 +7,9 @@ node_js:
 cache: npm
 
 install:
-    - npm install -g codecov snyk
+    - npm install -g codecov
     - npm ci
 
 script:
     - npm test
     - codecov
-    - snyk test
-
-after_success:
-    - snyk monitor
