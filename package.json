@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@hapi/hoek": "^9.2.0",
-    "@hapi/joi": "^17.1.1",
+    "joi": "^17.4.0",
     "lodash.mergewith": "^4.6.2"
   },
   "devDependencies": {
