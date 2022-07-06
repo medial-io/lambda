@@ -8,7 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@hapi/hoek": "^9.2.1",
+    "@hapi/hoek": "^9.3.0",
     "joi": "^17.4.0",
     "lodash.mergewith": "^4.6.2"
   },
