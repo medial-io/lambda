@@ -1,6 +1,6 @@
 {
   "name": "@medial/lambda",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A middleware for AWS lambda",
   "main": "index.js",
   "repository": "git://github.com/medial-io/lambda",
